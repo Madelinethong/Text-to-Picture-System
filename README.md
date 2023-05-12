@@ -31,7 +31,7 @@ Finally, execute `data_processing/training_data/changeFileName.py` python script
 ## Model Training
 ### Setup 
 For this project, the programming languages and development environment used are:
-1. Programming languages - Python, HTML, CSS
+1. Programming languages - Python
 2. Development environment: Google Colab
 
 In Google Colab, run the following command to access Google Drive from Google Colab:
@@ -156,8 +156,117 @@ image.save("image.png")
 ```
 
 ## GUI 
+A Graphical User Interface (GUI) can be run to visualise how the Text-to-Image System functions.
 
+For the GUI, the programming languages and development environment used are:
+1. Programming languages - Python, HTML, CSS
+2. Development environment: Google Colab
 
+After running the 3 lines of code in the `Python Packages` section, install Python Flask with the following commands:
 
+    1. !pip install flask-ngrok
+
+    2. !pip install flask-bootstrap
+
+    3. !wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.tgz
+
+    4. !tar -xvf /content/ngrok-stable-linux-amd64.tgz
+
+    5. !./ngrok authtoken 2OEnBSFsc4ePM3eBbjqWVO4I9ck_zpc24MUxWncfAF6FhWdz
+
+Next, run the following code:
+
+```python
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+import torch
+
+device = "cuda"
+
+# load model
+model_path = "/content/drive/MyDrive/output"
+pipe = StableDiffusionPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    torch_dtype=torch.float16,
+    safety_checker=None,
+    feature_extractor=None,
+    requires_safety_checker=False
+)
+# change scheduler
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
+# load lora weights
+pipe.unet.load_attn_procs(model_path, weight_name="pytorch_lora_weights.bin")
+# set to use GPU for inference
+pipe.to(device)
+```
+
+Then, run the Flask application with the following code:
+
+```python
+from flask import *
+from flask_ngrok import run_with_ngrok
+import os
+from os import listdir
+
+app = Flask(__name__, template_folder='/content/drive/MyDrive/template', static_folder='/content/drive/MyDrive/static')
+run_with_ngrok(app)   
+
+@app.route("/", methods=['GET', 'POST'])
+def home():
+    allImages = []
+
+    genderOption = request.values.get("genderRadios")
+    ageOption = request.values.get("ageRadio")
+    raceOption = request.values.get("raceRadios")
+    hairstylesOption = request.values.getlist("hairstyles")
+    hairColourOption = request.values.get("hairColourRadios")
+    facialHairOption = request.values.get("facialHairRadios")
+    faceShapeOption = request.values.get("faceShapeRadios")
+    faceGeometryOption = request.values.getlist("faceGeometry")
+    accessoriesOption = request.values.getlist("accessories")
+
+    prompt = genderOption
+
+    if ageOption != None:
+      prompt = prompt + ", " + ageOption
+    
+    if raceOption != None:
+      prompt = prompt + ", " + raceOption
+
+    for hairstyle in hairstylesOption:
+        prompt = prompt + ", " + hairstyle
+
+    if hairColourOption != None:
+      prompt = prompt + ", " + hairColourOption
+
+    if facialHairOption != None:
+      prompt = prompt + ", " + facialHairOption
+
+    if faceShapeOption != None:
+      prompt = prompt + ", " + faceShapeOption
+    
+    for faceGeometry in faceGeometryOption:
+      prompt = prompt + ", " + faceGeometry
+
+    for accessories in accessoriesOption:
+      prompt = prompt + ", " + accessories
+
+    # generate image
+    if prompt != None: 
+      count = 1
+      for i in range(5):
+        image = pipe(prompt, num_inference_steps=20).images[0]
+        # save image
+        image.save("/content/drive/MyDrive/static/image" + "-" + str(count) + ".png")
+        count += 1
+      
+      allImages = os.listdir("/content/drive/MyDrive/static")
+      allImages.remove("background.jpg")
+
+    return render_template('main.html', prompt=prompt, allImages=allImages)
+
+if __name__ == '__main__':
+    app.run()
+```
 
 ## Example (Video)
