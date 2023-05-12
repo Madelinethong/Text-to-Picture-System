@@ -52,7 +52,7 @@ For the latest development version of diffusers, kindly install it using the fol
   
     pip install git+https://github.com/huggingface/diffusers
 
-### Acelerate
+### Accelerate
 To configure `accelerate`, prepare a new file called `config.yaml` and append the following content:
 
 ```yaml
@@ -73,9 +73,89 @@ use_cpu: false
 During training, simply specify the `config_file` argument and point it to the path of the config file:
 
 ```python
-accelerate launch --config_file config.yaml train_text_to_image_lora.py ...
+accelerate launch --config_file /content/drive/MyDrive/config.yaml.txt /content/drive/MyDrive/train_text_to_image_lora.py
 ```
 
+### Google Colab
+
+```python
+accelerate launch --config_file /content/drive/MyDrive/config.yaml.txt /content/drive/MyDrive/train_text_to_image_lora.py \
+  --pretrained_model_name_or_path=runwayml/stable-diffusion-v1-5 \
+  --train_data_dir="data" \
+  --resolution=512 --center_crop --random_flip \
+  --train_batch_size=1 --checkpointing_steps=50000 \
+  --num_train_epochs=100 \
+  --learning_rate=1e-04 --lr_scheduler="constant" --lr_warmup_steps=0 \
+  --seed=42 \
+  --output_dir="output" \
+  --validation_prompt="big lips, no beard, wavy hair, young"
+```
+
+- `resolution`  - The resolution for input images, all the images in the  train/validation datasets will be resized to this. Higher resolution  requires higher memory during training. For example, set it to 256 to  train a model that generates 256 x 256 images.
+- `train_batch_size` - Batch size (per device) for the training data loader. Reduce the batch size to prevent Out-of-Memory error during training.
+- `num_train_epochs` - The number of training epochs. Default to 100.
+- `checkpointing_steps`  - Save a checkpoint of the training state every X updates. These  checkpoints are only suitable for resuming. Default to 500. Set it to a  higher value to reduce the number of checkpoints being saved.
+- `train_batch_size` - Batch size for training. Increasing it will speed up training at the cost of higher memory consumption. Recommends to use value of power 2 (1, 2, 4, 8, 16, etc.)
+
+> During the first run, it will download the Stable Diffusion model and save it locally in the `cache` folder. In the subsequent run, it will reuse the same cache data.
+
+### Resume from checkpoint
+The directory structure of Google Colab folder is as shown:
+
+```
+|- output
+|  |- checkpoint-5000    (first checkpoint)
+|  |- checkpoint-10000
+|  |- checkpoint-15000
+|  |- checkpoint-20000
+|  |- logs
+|- data
+|- train_text_to_image_lora.py
+```
+
+To resume from the latest checkpoint, use the `resume_from_checkpoint` argument and set it to thelatest:
+
+```bash
+accelerate launch --config_file /content/drive/MyDrive/config.yaml.txt /content/drive/MyDrive/train_text_to_image_lora.py \
+  ...
+  --resume_from_checkpoint="latest"
+```
+
+### Inference
+Once the training is completed, it will generate a small LoRA weights called `pytorch_lora_weights.bin` at the output directory.
+Next, run the following code:
+
+```python
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+import torch
+
+device = "cuda"
+
+# load model
+model_path = "/content/drive/MyDrive/output"
+pipe = StableDiffusionPipeline.from_pretrained(
+    "runwayml/stable-diffusion-v1-5",
+    torch_dtype=torch.float16,
+    safety_checker=None,
+    feature_extractor=None,
+    requires_safety_checker=False
+)
+# change scheduler
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+
+# load lora weights
+pipe.unet.load_attn_procs(model_path, weight_name="pytorch_lora_weights.bin")
+# set to use GPU for inference
+pipe.to(device)
+
+# generate an image
+prompt = "female, wavy hair, pointy nose"
+image = pipe(prompt, num_inference_steps=20).images[0]
+# save image
+image.save("image.png")
+```
+
+## GUI 
 
 
 
