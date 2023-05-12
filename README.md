@@ -27,6 +27,8 @@ The steps taken for pre-processing of the data are as such:
 
 3. To train the model, a set of 100,000 data is selected randomly. Access the `data_processing/training_data/maad_face_lite_version/metadata.jsonl` for the jsonl file that contains these 100,000 data.
 
+Finally, execute `data_processing/training_data/changeFileName.py` python script to edit and update the file path name in `metadata.jsonl`.
+
 ## Model Training
 
 ## Example (Video)
