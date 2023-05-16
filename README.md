@@ -200,7 +200,7 @@ pipe.unet.load_attn_procs(model_path, weight_name="pytorch_lora_weights.bin")
 pipe.to(device)
 ```
 
-Then, run the Flask application with the following code:
+Then, run the following code to execute the codes for the Flask application:
 
 ```python
 from flask import *
@@ -268,5 +268,9 @@ def home():
 if __name__ == '__main__':
     app.run()
 ```
+
+While the above code is running, click on the following URL for the Flask application using any web browsers.
+
+
 
 ## Example (Video)
