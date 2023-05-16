@@ -269,7 +269,13 @@ if __name__ == '__main__':
     app.run()
 ```
 
-While the above code is running, click on the following URL for the Flask application using any web browsers.
+While the above code is running, click on the following URL to run the Flask application using any web browsers.
+
+   ![url](/Screenshot/url.png)
+
+Click on the `Visit Site` button to launch the application.
+
+   ![visitSite](/Screenshot/visitSite.png)
 
 
 
