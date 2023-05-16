@@ -278,5 +278,6 @@ Click on the `Visit Site` button to launch the application.
    ![visitSite](/Screenshot/visitSite.png)
 
 
+   ![application](/Screenshot/application.png)
 
 ## Example (Video)
