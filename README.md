@@ -17,7 +17,62 @@ Access the `data_processing/training_data/MAAD_Face.csv` dataset in the folder. 
 
 6. Execute `data_processing/training_data/csvToJsonl.py` python script to convert the csv generated in Step 5 to a jsonl file. Originally, the MAAD-Face dataset consists of 47 attributes/labels. However, after refining the dataset to retain only the useful attributes, the generated jsonl file comprises 32 useful attributes.
 
-(ADD THE TABLE)
+```
+✔️ Available in the datasets
+➖ Not related
+👍 Useful
+```
+**MAAD Datasets**
+| Attributes|Status|Remark|
+|-|-|-|
+|male|👍|Need to have `Female` label explicitly. Preferably at the start of the caption|
+|young||Cannot define the age of young. Unable to tell if a person is young as it is difficult to differentiate the age of a person based on his/her appearance. A person may appears to look older than their age and vice versa.|
+|middle aged||Hard to pinpoint age group. Use `senior` to differentiate between normal and old people.|
+|senior|👍|Important feature to distinguish between different age group|
+|asian|👍|Prominent feature related to race (skin colour). However, the datasets seems to contain only south asian (Indian) images. Lack of Chinese, Japanese and Korean faces.|
+|white|👍|Prominent feature related to race (skin colour)|
+|black|👍|Prominent feature related to race (skin colour)|
+|rosy cheeks||Not very obvious, some images consist of rosy cheeks yet not being labelled|
+|shiny skin||Not very accurate, example 'n000034/0034_01.jpg'|
+|bald||Not accurate, example 'n000030/0062_01.jpg'|
+|wavy hair|👍|Useful|
+|receding hairline|👍|Useful|
+|bangs|👍|useful|
+|sideburns|👍|Useful|
+|black hair|👍|Prominent feature related to hair colour|
+|blonde hair|👍|Prominent feature related to hair colour. Original label used `blond hair` (typo)|
+|brown hair|👍|Prominent feature related to hair colour|
+|gray hair|👍|Prominent feature related to hair colour. Label is based on `gray` instead of `grey`|
+|no beard|👍|Useful|
+|mustache|👍| Useful but some images consist of mustache but not labelled|
+|5 o clock shadow|👍|Useful|
+|goatee|👍|Useful|
+|oval face|👍|Useful|
+|square face|👍|Useful|
+|round face|👍|Useful|
+|double chin|👍|Useful|
+|high cheekbones|👍|Useful|
+|chubby|👍|Useful|
+|obstructed forehead||Not relevant to our use case|
+|fully visible forehead||Not relevant to our use case|
+|brown eyes||Not useful, 'n000005/0062_01.jpg' does not have brown eyes. 'n000005/0084_01.jpg' wearing sunglasses|
+|bags under eyes|👍|Useful|
+|bushy eyebrows|👍|Useful|
+|arched eyebrows|👍|Based on training images and generated images, it is a prominent feature|
+|mouth closed||Not useful as 'n000002/0217_01.jpg' mouth is opened and 'n000004/0102_01.jpg' mouth is slightly opened|
+|smiling||Smile with both with and without teeth, not sure|
+|big lips|👍|Useful|
+|big nose|👍|Useful|
+|pointy nose|👍|Useful|
+|heavy makeup||People may have different opinions on the level of makeup. Will use the `wearing lipstick` label to differentiate between those with makeup and those without|
+|wearing hat||Accessories and not relevant|
+|wearing earrings||Accessories and not relevant|
+|wearing necktie||Accessories and not relevant|
+|wearing lipstick|👍|There are differences between images with this label and without|
+|no eyewear|👍|Important feature as most images has this label but there are some images that is wrongly labelled.|
+|eyeglasses|👍|Useful|
+|attractive||Difficult to gauge the definition of attractive. Judgements of attractiveness vary.|
+
 
 ## Data Pre-processing
 Execute `data_processing/training_data/metadata-maad-full-version.py` python script to pre-process the data.
