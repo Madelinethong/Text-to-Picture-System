@@ -1,5 +1,6 @@
-# Text-to-Image-System using Stable Diffusion
-Overview
+# Text-to-Picture System using Stable Diffusion
+The system offers a more comprehensive approach by incorporating textual attributes to generate profile pictures that align with user preferences. The physical attributes and images used for training in the Textto-Picture system were sourced from the MAAD-Face dataset. By incorporating the Stable Diffusion model, the system overcomes the challenge of relying solely on profile pictures for judging potential partners.
+
 ## Data Collection
 Access the `data_processing/training_data/MAAD_Face.csv` dataset in the folder. This dataset is downloaded from https://github.com/pterhoer/MAAD-Face.
 
