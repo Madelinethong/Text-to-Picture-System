@@ -212,7 +212,7 @@ image.save("image.png")
 ```
 
 ## GUI 
-A Graphical User Interface (GUI) can be run to visualise how the Text-to-Image System functions.
+A Graphical User Interface (GUI) can be run to visualise how the Text-to-Picture System functions.
 
 For the GUI, the programming languages and development environment used are:
 1. Programming languages - Python, HTML, CSS
