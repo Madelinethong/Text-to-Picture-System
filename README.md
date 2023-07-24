@@ -334,7 +334,7 @@ Click on the `Visit Site` button to launch the application.
    ![visitSite](/Screenshot/visitSite.png)
 
 
-   ![application](/Screenshot/system.png)
+   ![application](/Screenshot/interface.png)
 
 ## Example
-![url](/Screenshot/example.png)
+![url](/Screenshot/output.png)
